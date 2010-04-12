@@ -3,7 +3,7 @@
 <h2><%=h "#{@issue.tracker.name} ##{@issue.id}" %></h2>
 
 <% labelled_tabular_form_for :issue, @issue,
-                             :url => {:action => 'update', :id => @issue},
+                             :url => {:controller => 'issues', :action => 'update', :id => @issue},
                              :html => {:id => 'issue-form',
                                        :class => nil,
                                        :method => :put,
