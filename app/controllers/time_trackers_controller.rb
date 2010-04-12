@@ -1,6 +1,8 @@
 class TimeTrackersController < ApplicationController
     unloadable
 
+    helper :timelog
+
     def index
         @time_trackers = TimeTracker.find(:all)
     end
@@ -30,7 +32,13 @@ class TimeTrackersController < ApplicationController
             hours = @time_tracker.hours_spent.round(2)
             @time_tracker.destroy
 
-            redirect_to :controller => 'timelog', :action => 'edit', :issue_id => issue_id, :time_entry => { :hours => hours }
+            @issue = Issue.find(issue_id)
+            @project = @issue.project
+            @allowed_statuses = @issue.new_statuses_allowed_to(User.current)
+            @priorities = IssuePriority.all
+            @edit_allowed = User.current.allowed_to?(:edit_issues, @project)
+            @time_entry = TimeEntry.new
+            @time_entry.hours = hours
         end
     end
 
